@@ -140,7 +140,7 @@ export async function generateChatResponse(
       parts: [{ text: msg.parts }],
     })),
     generationConfig: {
-      maxOutputTokens: 1000,
+      maxOutputTokens: 8192, // Increased from 1000 to prevent cut-off
     },
   });
 
@@ -172,7 +172,7 @@ export async function generateChatResponseStream(
       parts: [{ text: msg.parts }],
     })),
     generationConfig: {
-      maxOutputTokens: 1000,
+      maxOutputTokens: 8192, // Increased from 1000 to prevent cut-off
     },
   });
 

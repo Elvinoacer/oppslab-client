@@ -17,6 +17,7 @@ export function useChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isPending, setIsPending] = useState(false);
+  const [status, setStatus] = useState<string>(""); // New status state
   const abortRef = useRef<AbortController | null>(null);
 
   const toggleChat = useCallback(() => setIsOpen((prev) => !prev), []);
@@ -49,6 +50,7 @@ export function useChat() {
 
     setMessages((prev) => [...prev, userMsg, assistantMsg]);
     setIsPending(true);
+    setStatus("Thinking..."); // Initial status
 
     try {
       // Build API messages from history (excluding the streaming placeholder)
@@ -91,7 +93,13 @@ export function useChat() {
           try {
             const event = JSON.parse(jsonStr);
 
-            if (event.type === "text") {
+            if (event.type === "status") {
+              // Update status message
+              setStatus(event.content);
+            } else if (event.type === "text") {
+              // Clear status once text starts arriving (optional, or keep showing it until done)
+              setStatus("Generating response..."); 
+              
               // Append text chunk to assistant message
               setMessages((prev) =>
                 prev.map((msg) =>
@@ -109,6 +117,7 @@ export function useChat() {
                     : msg
                 )
               );
+              setStatus(""); // Clear status
             } else if (event.type === "error") {
               setMessages((prev) =>
                 prev.map((msg) =>
@@ -117,6 +126,7 @@ export function useChat() {
                     : msg
                 )
               );
+              setStatus("");
             }
             // "opportunities" type is handled silently (context already in text)
           } catch {
@@ -131,6 +141,7 @@ export function useChat() {
           msg.id === assistantId ? { ...msg, isStreaming: false } : msg
         )
       );
+      setStatus("");
     } catch (error: any) {
       if (error.name === "AbortError") return;
 
@@ -146,8 +157,10 @@ export function useChat() {
             : msg
         )
       );
+      setStatus("");
     } finally {
       setIsPending(false);
+      setStatus("");
     }
   }, [messages, isPending]);
 
@@ -157,5 +170,6 @@ export function useChat() {
     messages,
     sendMessage,
     isPending,
+    status, // Export status
   };
 }

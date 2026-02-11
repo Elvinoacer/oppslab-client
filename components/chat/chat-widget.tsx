@@ -26,7 +26,7 @@ const SUGGESTED_PROMPTS = [
 ];
 
 export function ChatWidget() {
-  const { isOpen, toggleChat, messages, sendMessage, isPending } = useChat();
+  const { isOpen, toggleChat, messages, sendMessage, isPending, status } = useChat();
   const [inputValue, setInputValue] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,7 +36,7 @@ export function ChatWidget() {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, status]); // Added status dependency
 
   // Focus input on open
   useEffect(() => {
@@ -185,23 +185,26 @@ export function ChatWidget() {
             </div>
           )}
 
-          {/* ─── Typing Indicator ─── */}
-          {isPending &&
-            messages.length > 0 &&
-            !messages[messages.length - 1]?.isStreaming && (
-              <div className="flex w-full gap-2.5 px-3 py-1.5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-sm">
-                  <Bot className="h-3.5 w-3.5" />
-                </div>
-                <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/60 rounded-2xl rounded-tl-md px-4 py-3 shadow-sm">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <span className="w-1.5 h-1.5 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <span className="w-1.5 h-1.5 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" />
-                  </div>
-                </div>
+          {/* ─── Status / Typing Indicator ─── */}
+          {(status || (isPending && messages.length > 0 && !messages[messages.length - 1]?.content)) && (
+            <div className="flex w-full gap-2.5 px-3 py-1.5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-sm">
+                <Bot className="h-3.5 w-3.5" />
               </div>
-            )}
+              <div className="flex items-center gap-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/60 rounded-2xl rounded-tl-md px-4 py-2.5 shadow-sm">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" />
+                </div>
+                {status && (
+                  <span className="text-xs font-medium text-gray-500 dark:text-gray-400 animate-pulse">
+                    {status}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ─── Input Area ─── */}

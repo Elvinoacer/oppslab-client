@@ -13,7 +13,8 @@ import { RecommendedSection } from "@/components/opportunities/recommended-secti
 import { GoalBanner } from "@/components/marketing/goal-banner";
 
 // ISR: Revalidate every 60 seconds
-export const revalidate = 60;
+// Force dynamic rendering to fix Vercel build (no DB access during build)
+export const dynamic = "force-dynamic";
 
 async function getHomeData() {
   try {

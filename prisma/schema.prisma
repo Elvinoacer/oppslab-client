@@ -1,0 +1,1015 @@
+// =============================================================================
+// AI-Powered Opportunity Aggregator - Complete Database Schema
+// Prisma 7.x Compatible Schema
+// =============================================================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // URL managed in prisma.config.ts per Prisma 7 best practices
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+// Primary opportunity type classification
+enum OpportunityCategory {
+  INTERNSHIP
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  FREELANCE
+  TUTORING
+  CONSULTING
+  VIRTUAL_ASSISTANT
+  TRANSCRIPTION
+  TRANSLATION
+  COACHING
+  DROPSHIPPING
+  PRINT_ON_DEMAND
+  DIGITAL_PRODUCT
+  RESELLING
+  HANDMADE
+  CONTENT_MONETIZATION
+  SPONSORSHIP
+  NEWSLETTER
+  COURSE
+  PODCASTING
+  MEMBERSHIP
+  WEBSITE_FLIPPING
+  DOMAIN_FLIPPING
+  REAL_ESTATE_DIGITAL
+  TRADING_CRYPTO
+  TRADING_STOCK
+  INVESTMENT
+  USER_TESTING
+  DATA_LABELING
+  BUG_BOUNTY
+  AI_TRAINING
+  MYSTERY_SHOPPING
+  SCHOLARSHIP
+  GRANT
+  FELLOWSHIP
+  RESEARCH
+  VOLUNTEER
+  COMPETITION
+  PROGRAM
+  APPRENTICESHIP
+  GIG
+  SIDE_HUSTLE
+  SURVEY
+  AFFILIATE
+  AMBASSADOR
+  TASK
+  
+  // Missing root categories from seed
+  JOB
+  CONFERENCE
+  WORKSHOP
+  ACCELERATOR
+  FUNDING
+  MENTORSHIP
+  HACKATHON
+  INCUBATOR
+  VOLUNTEERING
+  SEMINAR
+  BOOTCAMP
+  CREATIVE
+  NETWORKING
+  CERTIFICATION
+  STUDY_ABROAD
+  
+  OTHER
+}
+
+// Industry sectors
+enum Industry {
+  TECHNOLOGY
+  HEALTHCARE
+  FINANCE
+  EDUCATION
+  GOVERNMENT
+  NONPROFIT
+  CONSULTING
+  MEDIA
+  ENTERTAINMENT
+  RETAIL
+  MANUFACTURING
+  ENERGY
+  REAL_ESTATE
+  LEGAL
+  AGRICULTURE
+  TRANSPORTATION
+  HOSPITALITY
+  TELECOMMUNICATIONS
+  AEROSPACE
+  BIOTECHNOLOGY
+  AUTOMOTIVE
+  CONSTRUCTION
+  ECOMMERCE
+  GAMING
+  CRYPTO_BLOCKCHAIN
+  AI_ML
+  CYBERSECURITY
+  OTHER
+}
+
+// Specific role types
+enum RoleType {
+  // Engineering
+  BACKEND_ENGINEER
+  FRONTEND_ENGINEER
+  FULLSTACK_ENGINEER
+  MOBILE_DEVELOPER
+  DEVOPS_ENGINEER
+  DATA_ENGINEER
+  ML_ENGINEER
+  SECURITY_ENGINEER
+  QA_ENGINEER
+  EMBEDDED_SYSTEMS
+  
+  // Data & Analytics
+  DATA_SCIENTIST
+  DATA_ANALYST
+  BUSINESS_ANALYST
+  PRODUCT_ANALYST
+  
+  // Design
+  UX_DESIGNER
+  UI_DESIGNER
+  PRODUCT_DESIGNER
+  GRAPHIC_DESIGNER
+  
+  // Product & Management
+  PRODUCT_MANAGER
+  PROJECT_MANAGER
+  ENGINEERING_MANAGER
+  PROGRAM_MANAGER
+  TECHNICAL_PROGRAM_MANAGER
+  
+  // Research
+  RESEARCHER
+  RESEARCH_SCIENTIST
+  RESEARCH_ASSISTANT
+  
+  // Business
+  SALES
+  MARKETING
+  BUSINESS_DEVELOPMENT
+  OPERATIONS
+  FINANCE_ANALYST
+  ACCOUNTANT
+  HR_SPECIALIST
+  CONSULTANT
+  
+  // Other
+  WRITER
+  CONTENT_CREATOR
+  COMMUNITY_MANAGER
+  CUSTOMER_SUCCESS
+  SUPPORT_ENGINEER
+  LEGAL_COUNSEL
+  OTHER
+}
+
+// Experience level requirements
+enum ExperienceLevel {
+  STUDENT
+  ENTRY_LEVEL
+  MID_LEVEL
+  SENIOR
+  LEAD
+  PRINCIPAL
+  EXECUTIVE
+  ANY
+}
+
+// Work arrangement
+enum WorkMode {
+  REMOTE
+  HYBRID
+  ONSITE
+  FLEXIBLE
+}
+
+// Opportunity lifecycle status
+enum OpportunityStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  EXPIRING_SOON
+  EXPIRED
+  FILLED
+  ARCHIVED
+  DELETED
+}
+
+// Compensation types
+enum CompensationType {
+  SALARY
+  HOURLY
+  STIPEND
+  PRIZE
+  EQUITY
+  UNPAID
+  NEGOTIABLE
+  NOT_SPECIFIED
+}
+
+// Compensation time periods
+enum CompensationPeriod {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+  YEAR
+  PROJECT
+  TOTAL
+}
+
+// Application methods
+enum ApplicationMethod {
+  URL
+  EMAIL
+  BOTH
+  PORTAL
+  IN_PERSON
+  OTHER
+}
+
+// Source platforms
+enum SourcePlatform {
+  LINKEDIN
+  INDEED
+  GLASSDOOR
+  HANDSHAKE
+  ANGELLIST
+  GREENHOUSE
+  LEVER
+  WORKDAY
+  COMPANY_WEBSITE
+  UNIVERSITY_BOARD
+  GOVERNMENT_PORTAL
+  NEWSLETTER
+  TWITTER_X
+  DISCORD
+  SLACK
+  REFERRAL
+  OTHER
+}
+
+// User roles
+enum UserRole {
+  ADMIN
+  CURATOR
+  USER
+}
+
+// Tag categories
+enum TagCategory {
+  SKILL
+  PROGRAM
+  BENEFIT
+  LOCATION
+  TECHNOLOGY
+  CERTIFICATION
+  INDUSTRY
+  MISC
+}
+
+// Eligibility criterion types
+enum EligibilityType {
+  CITIZENSHIP
+  AGE
+  ENROLLMENT
+  LOCATION
+  GPA
+  DEGREE
+  VISA
+  BACKGROUND_CHECK
+  CLEARANCE
+  OTHER
+}
+
+// Benefit types
+enum BenefitType {
+  HEALTH_INSURANCE
+  DENTAL_INSURANCE
+  VISION_INSURANCE
+  LIFE_INSURANCE
+  DISABILITY_INSURANCE
+  RETIREMENT_401K
+  HOUSING
+  RELOCATION
+  SIGNING_BONUS
+  PERFORMANCE_BONUS
+  STOCK_OPTIONS
+  RSU
+  PTO
+  PARENTAL_LEAVE
+  MENTORSHIP
+  TRAINING
+  EQUIPMENT
+  MEALS
+  TRANSPORTATION
+  GYM_MEMBERSHIP
+  REMOTE_STIPEND
+  EDUCATION_REIMBURSEMENT
+  PROFESSIONAL_DEVELOPMENT
+  CONFERENCE_BUDGET
+  OTHER
+}
+
+// Required application materials
+enum MaterialType {
+  RESUME
+  COVER_LETTER
+  TRANSCRIPT
+  PORTFOLIO
+  REFERENCES
+  WRITING_SAMPLE
+  CODE_SAMPLE
+  VIDEO_INTRO
+  WORK_SAMPLES
+  CERTIFICATIONS
+  RECOMMENDATION_LETTERS
+  ESSAYS
+  OTHER
+}
+
+// Timeline event types
+enum TimelineEventType {
+  APPLICATION_OPEN
+  APPLICATION_DEADLINE
+  EARLY_DEADLINE
+  PRIORITY_DEADLINE
+  INTERVIEW_PERIOD
+  ASSESSMENT_DATE
+  DECISION_DATE
+  ACCEPTANCE_DEADLINE
+  START_DATE
+  END_DATE
+  ORIENTATION
+  OTHER
+}
+
+// Contact types
+enum ContactType {
+  RECRUITER
+  HR
+  HIRING_MANAGER
+  PROGRAM_COORDINATOR
+  TALENT_ACQUISITION
+  GENERAL
+  OTHER
+}
+
+// History change types
+enum ChangeType {
+  CREATED
+  UPDATED
+  STATUS_CHANGED
+  PUBLISHED
+  ARCHIVED
+  RESTORED
+  DELETED
+}
+
+// User's saved opportunity status
+enum ApplicationStatus {
+  NOT_APPLIED
+  SAVED
+  APPLYING
+  APPLIED
+  PHONE_SCREEN
+  INTERVIEWING
+  ASSESSMENT
+  FINAL_ROUND
+  OFFER_RECEIVED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+// Device types for analytics
+enum DeviceType {
+  MOBILE
+  TABLET
+  DESKTOP
+  UNKNOWN
+}
+
+// =============================================================================
+// MARKET INSIGHTS
+// =============================================================================
+
+enum InsightType {
+  FACT
+  TREND
+}
+
+model MarketInsight {
+  id        String      @id @default(cuid())
+  type      InsightType
+  content   String      @db.Text
+  source    String?
+  validFrom DateTime
+  validTo   DateTime
+  createdAt DateTime    @default(now())
+  
+  @@index([type])
+  @@index([validFrom])
+  @@index([validTo])
+}
+
+// =============================================================================
+// CORE TABLES
+// =============================================================================
+
+// Main opportunities table - the heart of the system
+model Opportunity {
+  id   String @id @default(cuid())
+  slug String @unique
+
+  // Original content
+  originalMarkdown String @db.Text
+
+  // Core content
+  title            String
+  company          String
+  description      String   @db.Text
+  shortDescription String?  @db.VarChar(300)
+  coverImage       String?  @db.Text // Unsplash image URL
+  
+  // Multi-dimensional categorization
+  primaryCategory  OpportunityCategory
+  industry         Industry?
+  roleType         RoleType?
+  experienceLevel  ExperienceLevel     @default(ANY)
+  workMode         WorkMode?
+  
+  // Location fields
+  locationRaw         String?
+  locationCity        String?
+  locationState       String?
+  locationCountry     String?
+  locationCoordinates Json?    // { lat: number, lng: number }
+  isRemote            Boolean  @default(false)
+  
+  // Temporal information
+  deadline  DateTime?
+  startDate DateTime?
+  endDate   DateTime?
+  duration  String?   // Human-readable: "3 months", "Summer 2026"
+  isRolling Boolean   @default(false)
+  
+  // Compensation
+  compensationType     CompensationType @default(NOT_SPECIFIED)
+  compensationMin      Decimal?         @db.Decimal(12, 2)
+  compensationMax      Decimal?         @db.Decimal(12, 2)
+  compensationCurrency String           @default("USD") @db.VarChar(3)
+  compensationPeriod   CompensationPeriod?
+  compensationRaw      String?          // Original text preserved
+  
+  // Requirements (stored as arrays)
+  educationRequirements String[]
+  skillsRequired        String[]
+  experienceRequired    String?  @db.Text
+  minimumGPA            Decimal? @db.Decimal(3, 2)
+  languageRequirements  String[]
+  
+  // Application details
+  applicationUrl          String?
+  applicationEmail        String?
+  applicationMethod       ApplicationMethod?
+  applicationInstructions String? @db.Text
+  
+  // Source tracking
+  sourcePlatform SourcePlatform?
+  sourceUrl      String?
+  curatedById    String?
+  curatedBy      User?           @relation("CuratedOpportunities", fields: [curatedById], references: [id], onDelete: SetNull)
+  
+  // Status management
+  status      OpportunityStatus @default(DRAFT)
+  publishedAt DateTime?
+  expiresAt   DateTime?
+  
+  // Quality metrics
+  completenessScore  Int     @default(0) // 0-100
+  aiConfidenceScore  Int     @default(0) // 0-100
+  verificationStatus Boolean @default(false)
+  
+  // Engagement tracking
+  viewCount    Int       @default(0)
+  clickCount   Int       @default(0)
+  saveCount    Int       @default(0)
+  lastViewedAt DateTime?
+  
+  // SEO & Search
+  metaTitle       String?
+  metaDescription String?  @db.VarChar(160)
+  keywords        String[]
+  // Full-text search vector (PostgreSQL tsvector) - managed via trigger
+  searchVector    Unsupported("tsvector")?
+  
+  // Timestamps
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime? // Soft delete
+  
+  // Relations
+  tags               OpportunityTag[]
+  categories         OpportunityCategory_Rel[]
+  eligibilityCriteria EligibilityCriteria[]
+  benefits           Benefit[]
+  requiredMaterials  RequiredMaterial[]
+  timelineEvents     TimelineEvent[]
+  contacts           Contact[]
+  history            OpportunityHistory[]
+  savedBy            SavedOpportunity[]
+  searchClicks       SearchQuery[]
+  vectorEmbedding    VectorEmbedding?
+  resumes            Resume[]
+
+  // Indexes for common queries
+  @@index([status, deadline])
+  @@index([primaryCategory])
+  @@index([industry])
+  @@index([roleType])
+  @@index([experienceLevel])
+  @@index([workMode])
+  @@index([locationCountry, locationCity])
+  @@index([isRemote])
+  @@index([createdAt])
+  @@index([publishedAt])
+  @@index([company])
+  @@index([status, primaryCategory, industry])
+  // Compound indexes for common filter combinations
+  @@index([status, primaryCategory, createdAt])
+  @@index([status, isRemote, createdAt])
+  @@index([status, publishedAt])
+}
+
+// =============================================================================
+// TAGS - Flexible tagging system
+// =============================================================================
+
+model Tag {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  slug        String      @unique
+  category    TagCategory @default(MISC)
+  description String?
+  usageCount  Int         @default(0)
+  color       String?     @db.VarChar(7) // Hex color
+  icon        String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  opportunities OpportunityTag[]
+  
+  @@index([category])
+  @@index([usageCount])
+}
+
+// Join table for Opportunity <-> Tag many-to-many
+model OpportunityTag {
+  id            String @id @default(cuid())
+  opportunityId String
+  tagId         String
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  tag         Tag         @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([opportunityId, tagId])
+  @@index([tagId])
+}
+
+// =============================================================================
+// CATEGORIES - Hierarchical tree structure
+// =============================================================================
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  icon        String?
+  color       String? @db.VarChar(7)
+  imageUrl    String?
+  sortOrder   Int     @default(0)
+  isActive    Boolean @default(true)
+  
+  // Hierarchical structure
+  level    Int     @default(0)
+  parentId String?
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryHierarchy")
+  
+  // Cached count
+  opportunityCount Int @default(0)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  opportunities OpportunityCategory_Rel[]
+  
+  @@index([parentId])
+  @@index([level])
+  @@index([isActive])
+}
+
+// Join table for Opportunity <-> Category many-to-many
+model OpportunityCategory_Rel {
+  id            String @id @default(cuid())
+  opportunityId String
+  categoryId    String
+  isPrimary     Boolean @default(false)
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([opportunityId, categoryId])
+  @@index([categoryId])
+}
+
+// =============================================================================
+// ELIGIBILITY CRITERIA
+// =============================================================================
+
+model EligibilityCriteria {
+  id             String          @id @default(cuid())
+  opportunityId  String
+  criterionType  EligibilityType
+  criterionValue String
+  isRequired     Boolean         @default(true)
+  description    String?
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([opportunityId])
+  @@index([criterionType])
+}
+
+// =============================================================================
+// BENEFITS
+// =============================================================================
+
+model Benefit {
+  id            String      @id @default(cuid())
+  opportunityId String
+  benefitType   BenefitType
+  description   String?
+  value         Decimal?    @db.Decimal(12, 2) // Monetary value if applicable
+  isIncluded    Boolean     @default(true)
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([opportunityId])
+  @@index([benefitType])
+}
+
+// =============================================================================
+// REQUIRED MATERIALS
+// =============================================================================
+
+model RequiredMaterial {
+  id            String       @id @default(cuid())
+  opportunityId String
+  materialType  MaterialType
+  isRequired    Boolean      @default(true)
+  instructions  String?
+  format        String?      // PDF, DOCX, URL, etc.
+  maxPages      Int?
+  maxSize       Int?         // File size limit in MB
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([opportunityId])
+}
+
+// =============================================================================
+// TIMELINE EVENTS
+// =============================================================================
+
+model TimelineEvent {
+  id                  String            @id @default(cuid())
+  opportunityId       String
+  eventType           TimelineEventType
+  eventDate           DateTime
+  eventDateEnd        DateTime?         // For date ranges
+  description         String?
+  isEstimate          Boolean           @default(false)
+  notificationEnabled Boolean           @default(false)
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([opportunityId])
+  @@index([eventType])
+  @@index([eventDate])
+}
+
+// =============================================================================
+// CONTACTS
+// =============================================================================
+
+model Contact {
+  id            String      @id @default(cuid())
+  opportunityId String
+  contactType   ContactType @default(GENERAL)
+  name          String?
+  email         String?
+  phone         String?
+  title         String?
+  linkedinUrl   String?
+  notes         String?
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([opportunityId])
+}
+
+// =============================================================================
+// OPPORTUNITY HISTORY - Audit Trail
+// =============================================================================
+
+model OpportunityHistory {
+  id            String     @id @default(cuid())
+  opportunityId String
+  changedAt     DateTime   @default(now())
+  changedById   String?
+  changeType    ChangeType
+  fieldName     String?
+  oldValue      Json?
+  newValue      Json?
+  fullSnapshot  Json?      // Complete opportunity state at that moment
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  changedBy   User?       @relation(fields: [changedById], references: [id], onDelete: SetNull)
+  
+  @@index([opportunityId])
+  @@index([changedAt])
+  @@index([changeType])
+}
+
+// =============================================================================
+// USERS - Authentication & Profiles
+// =============================================================================
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  role           UserRole  @default(USER)
+  hashedPassword String?
+  emailVerified  DateTime?
+  image          String?
+  bio            String?   @db.Text
+  location       String?
+  skills         String[]  @default([])
+  preferences    Json?     // User preferences stored as JSON
+  richProfile    Json?     // Structured profile: education, experience, projects, etc.
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastLoginAt DateTime?
+  
+  // Relations
+  curatedOpportunities Opportunity[]        @relation("CuratedOpportunities")
+  savedOpportunities   SavedOpportunity[]
+  savedSearches        SavedSearch[]
+  searchQueries        SearchQuery[]
+  opportunityChanges   OpportunityHistory[]
+  drafts               Draft[]
+  accounts             Account[]
+  sessions             Session[]
+  resumes              Resume[]
+  
+  @@index([role])
+  @@index([email])
+}
+
+// NextAuth.js Account model
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+// NextAuth.js Session model
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+}
+
+// NextAuth.js Verification Token
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// =============================================================================
+// SAVED OPPORTUNITIES - User Bookmarks
+// =============================================================================
+
+model SavedOpportunity {
+  id            String            @id @default(cuid())
+  userId        String
+  opportunityId String
+  savedAt       DateTime          @default(now())
+  notes         String?           @db.Text // User's personal notes
+  folderName    String?           // Optional organization
+  status        ApplicationStatus @default(SAVED)
+  statusUpdatedAt DateTime?
+  reminderDate  DateTime?
+  feedback      String?           @db.Text // User's feedback on the application process/result
+  lastFollowUpAt DateTime?        // When the user last followed up
+  
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, opportunityId])
+  @@index([userId])
+  @@index([status])
+  @@index([folderName])
+}
+
+// =============================================================================
+// SAVED SEARCHES - User's saved search criteria
+// =============================================================================
+
+model SavedSearch {
+  id             String   @id @default(cuid())
+  userId         String
+  name           String
+  query          String?
+  filters        Json     // Stored filter criteria
+  alertFrequency String?  // "instant", "daily", "weekly", "none"
+  isActive       Boolean  @default(true)
+  lastAlertedAt  DateTime?
+  matchCount     Int      @default(0)
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([isActive])
+}
+
+// =============================================================================
+// SEARCH QUERIES - Analytics
+// =============================================================================
+
+model SearchQuery {
+  id                   String      @id @default(cuid())
+  userId               String?
+  query                String
+  filters              Json?
+  resultsCount         Int         @default(0)
+  clickedOpportunityId String?
+  searchedAt           DateTime    @default(now())
+  deviceType           DeviceType?
+  userAgent            String?
+  ipHash               String?     // Hashed IP for analytics
+  sessionId            String?
+  
+  user               User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  clickedOpportunity Opportunity? @relation(fields: [clickedOpportunityId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([searchedAt])
+  @@index([query])
+}
+
+// =============================================================================
+// VECTOR EMBEDDINGS - Pinecone Sync Tracking
+// =============================================================================
+
+model VectorEmbedding {
+  id             String   @id @default(cuid())
+  opportunityId  String   @unique
+  pineconeId     String   @unique
+  embeddingModel String   @default("text-embedding-3-small")
+  embeddedAt     DateTime @default(now())
+  lastUpdatedAt  DateTime @updatedAt
+  needsUpdate    Boolean  @default(false)
+  contentHash    String?  // Hash of content to detect changes
+  
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  
+  @@index([needsUpdate])
+}
+
+// =============================================================================
+// DRAFTS - Auto-save for admin CMS
+// =============================================================================
+
+model Draft {
+  id        String   @id @default(cuid())
+  userId    String
+  content   String   @db.Text
+  metadata  Json?    // Source platform, URL, etc.
+  title     String?  // Optional title for identification
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([updatedAt])
+}
+
+// =============================================================================
+// PLATFORM STATISTICS - Cached aggregates
+// =============================================================================
+
+model PlatformStats {
+  id                 String   @id @default(cuid())
+  date               DateTime @unique @db.Date
+  totalActive        Int      @default(0)
+  totalDrafts        Int      @default(0)
+  totalExpired       Int      @default(0)
+  expiringSoon       Int      @default(0)
+  newOpportunities   Int      @default(0)
+  totalViews         Int      @default(0)
+  totalClicks        Int      @default(0)
+  totalSearches      Int      @default(0)
+  uniqueVisitors     Int      @default(0)
+  topCategories      Json?    // Array of { category, count }
+  topIndustries      Json?
+  topLocations       Json?
+  topCompanies       Json?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([date])
+}
+
+// =============================================================================
+// RESUMES - User Resume Builder
+// =============================================================================
+
+model Resume {
+  id             String   @id @default(cuid())
+  userId         String
+  title          String   @default("Untitled Resume")
+  template       String   @default("modern") // modern | executive | creative
+  data           Json     // Full resume content as structured JSON
+  opportunityId  String?  // Optional: tied to a specific opportunity
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  opportunity Opportunity? @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([opportunityId])
+}
